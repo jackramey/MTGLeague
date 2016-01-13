@@ -1,0 +1,11 @@
+#Python Files
+.py[cod]
+
+#VirtualEnv
+venv/
+
+#Vim Files
+.*.un~
+.*.swp
+
+
