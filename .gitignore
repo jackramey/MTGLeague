@@ -8,4 +8,5 @@ venv/
 .*.un~
 .*.swp
 
+AllSets.json
 
