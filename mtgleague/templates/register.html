@@ -1,0 +1,25 @@
+{% import 'macros.html' as macros %}
+{% extends 'layout.html' %}
+{% block body %}
+<br/>
+<br/>
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+        <form class="form-horizontal" role="form" method=post>
+            {% call macros.render_form(form, action_url=url_for('register'), action_text='Register',
+            class_='register-form') %}
+            {{ macros.render_field(form.name) }}
+            {{ macros.render_field(form.email) }}
+            {{ macros.render_field(form.password) }}
+            {{ macros.render_field(form.confirm) }}
+            {% endcall %}
+        </form>
+    </div>
+</div>
+{% if error %}
+<div class="alert alert-error"><strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+</div>
+</div>
+{% endblock %}

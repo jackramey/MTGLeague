@@ -4,3 +4,6 @@ from flask import Flask
 app = Flask(__name__)
 app.config.from_pyfile('mtgleague.cfg', False)
 
+from mtgleague.views.index import *
+from mtgleague.views.league import *
+

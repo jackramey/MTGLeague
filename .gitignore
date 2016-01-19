@@ -1,5 +1,6 @@
 #Python Files
 .py[cod]
+__pycache__/
 
 #VirtualEnv
 venv/
@@ -8,5 +9,9 @@ venv/
 .*.un~
 .*.swp
 
+#IDEA files
+.idea/
+
+#MTG Json Card DB (for now)
 AllSets.json
 
