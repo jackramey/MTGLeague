@@ -64,12 +64,8 @@
         <!-- /.container-fluid -->
     </nav>
     <div class="container">
-        <div class="row">
-            <!-- BEGIN BODY CONTENT -->
-            <div class="col-md-offset-2 col-md-8">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+        <!-- BEGIN BODY CONTENT -->
+        {% block container%}{% endblock %}
         <!-- END BODY CONTENT -->
     </div>
     <!-- Site dependent scripts here for faster page loading -->

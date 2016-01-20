@@ -4,6 +4,7 @@ from mtgleague import app
 from mtgleague.forms.login import LoginForm
 from mtgleague.forms.register import RegisterForm
 from mtgleague.models.user import User
+from mtgleague.util import db
 from mtgleague.views.scaffold import BaseView
 
 
@@ -19,20 +20,21 @@ class LoginView(BaseView):
 
     def handle_request(self, *args, **kwargs):
         form = LoginForm()
+        errors = []
         if form.validate_on_submit():
-            user = User.query.filter_by(email=form.email.data).first()
+            user = User.query.filter_by(email=form.email.data.lower()).first()
             if user is None:
-                error = "That user does not exist."
-                return render_template('login.html', error=error)
+                errors.append("That user does not exist.")
+                return render_template('login.html', form=form, errors=errors)
             else:
                 if user.check_password(form.password.data):
                     login_user(user, remember=True)
                     return redirect(url_for('index'))
                 else:
-                    error = "Username and Password combination are incorrect."
-                    return render_template('login.html', error=error, **self.context)
+                    errors.append("Username and Password combination are incorrect.")
+                    return render_template('login.html', form=form, errors=errors, **self.context)
         else:
-            return render_template('login.html', form=form, **self.context)
+            return render_template('login.html', form=form, errors=errors, **self.context)
 
 
 class LogoutView(BaseView):
@@ -47,8 +49,17 @@ class RegisterView(BaseView):
     methods = ['GET', 'POST']
 
     def handle_request(self, *args, **kwargs):
+        errors = []
         form = RegisterForm()
         if form.validate_on_submit():
+            if User.query.filter_by(email=form.email.data.lower()).first() is not None:
+                errors.append("A user has already registered this email address.")
+                return render_template('register.html', form=form, errors=errors, **self.context)
+            else:
+                new_user = User(form.name.data, form.email.data, form.password.data)
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user)
                 return redirect(url_for('index'))
         else:
             return render_template('register.html', form=form, **self.context)
