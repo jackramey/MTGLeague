@@ -48,10 +48,10 @@ class Anonymous(AnonymousUserMixin):
     def is_anonymous(self):
         return True
 
-#@login_manager.user_loader
-#def load_user(userid):
-#    return User.objects(id=userid).first()
-#
+@login_manager.user_loader
+def load_user(userid):
+    return User.query.filter_by(id=userid).first()
+
 #@login_manager.token_loader
 #def load_token(token):
 #    data = login_serializer.loads(token)
