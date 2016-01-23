@@ -1,6 +1,5 @@
 from mtgleague.util import db
 from mtgleague.models.event import Event
-from mtgleague.models.user import User
 
 
 class League(db.Model):
