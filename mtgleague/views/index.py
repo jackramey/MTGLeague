@@ -1,8 +1,7 @@
 from flask import redirect, render_template, url_for
 from flask_login import login_user, logout_user
 from mtgleague import app
-from mtgleague.forms.login import LoginForm
-from mtgleague.forms.register import RegisterForm
+from mtgleague.forms import LoginForm, RegisterForm
 from mtgleague.models.user import User
 from mtgleague.util import db
 from mtgleague.views.scaffold import BaseView

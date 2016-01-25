@@ -1,10 +1,10 @@
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, url_for
 from flask_login import login_required, current_user
 
 from mtgleague import app
 from mtgleague import db
 from mtgleague.views.scaffold import BaseView
-from mtgleague.forms.league import LeagueForm
+from mtgleague.forms import LeagueForm
 from mtgleague.models.league import League
 
 class LeagueView(BaseView):
