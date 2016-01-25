@@ -1,3 +1,6 @@
+#Temp folders
+tmp/
+
 #Python Files
 .py[cod]
 __pycache__/
@@ -14,4 +17,7 @@ venv/
 
 #MTG Json Card DB (for now)
 AllSets.json
+
+#System Files
+.DS_Store
 

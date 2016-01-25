@@ -19,4 +19,3 @@ class League(db.Model):
 
     def __unicode__(self):
         return self.name
-

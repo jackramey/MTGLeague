@@ -1,4 +1,4 @@
-{% import 'macros.html' as macros %}
+{% import 'wtf.html' as wtf %}
 
 {% extends 'layout.html' %}
 {% block container %}
@@ -7,13 +7,7 @@
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <form class="form-horizontal" role="form" method=post>
-            {% call macros.render_form(form, action_url=url_for('register'), action_text='Register', errors=errors,
-                class_='register-form') %}
-                {{ macros.render_field(form.name) }}
-                {{ macros.render_field(form.email) }}
-                {{ macros.render_field(form.password) }}
-                {{ macros.render_field(form.confirm) }}
-            {% endcall %}
+            {{ wtf.quick_form(form) }}
         </form>
     </div>
 </div>

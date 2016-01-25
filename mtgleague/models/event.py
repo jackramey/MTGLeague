@@ -1,5 +1,6 @@
 from mtgleague.util import db
 from mtgleague.models.participant import Participant
+from mtgleague.models.round import Round
 
 
 class Event(db.Model):
@@ -8,6 +9,7 @@ class Event(db.Model):
     league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
     participants = db.relationship('Participant', backref='event',
                                    lazy='dynamic')
+    rounds = db.relationship('Round', backref='event', lazy='dynamic')
 
     def __init__(self, name, league):
         self.name = name
