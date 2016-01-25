@@ -1,5 +1,5 @@
-from mtgleague.forms.fields import MyDateField
-from wtforms import Form
+from mtgleague.fields import MyDateField
+from flask_wtf import Form
 from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo
 

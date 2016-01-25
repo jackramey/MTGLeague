@@ -1,10 +1,10 @@
-from mtgleague.widgets import DateInput, DateTimeInput
+from mtgleague import widgets
 from wtforms.fields import DateField, DateTimeField
 
 
 class MyDateField(DateField):
-    widget = DateInput()
+    widget = widgets.DateInput()
 
 
 class MyDateTimeField(DateTimeField):
-    widget = DateTimeInput()
+    widget = widgets.DateTimeInput()
