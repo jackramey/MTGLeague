@@ -1,13 +1,17 @@
 from mtgleague.fields import MyDateField
 from flask_wtf import Form
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import PasswordField, StringField, SubmitField, FieldList, FormField
 from wtforms.validators import DataRequired, Email, EqualTo
+
+
+class RoundForm(Form):
+    start_date = MyDateField('Start Date', format="%m/%d/%Y")
+    end_date = MyDateField('End Date', format="%m/%d/%Y")
 
 
 class EventForm(Form):
     name = StringField('Name', validators=[DataRequired()])
-    start_date = MyDateField('Start Date', format="%m/%d/%Y")
-    end_date = MyDateField('End Date', format="%m/%d/%Y")
+    rounds = FieldList(FormField(RoundForm), min_entries=2)
     submit = SubmitField('Submit', validators=[DataRequired()])
 
 

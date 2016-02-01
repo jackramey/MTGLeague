@@ -1,11 +1,11 @@
 from flask import redirect, render_template, url_for
 from flask_login import login_required, current_user
 
-from mtgleague import app
-from mtgleague import db
+from mtgleague.util import db
 from mtgleague.views.scaffold import BaseView
 from mtgleague.forms import LeagueForm
 from mtgleague.models.league import League
+
 
 class LeagueView(BaseView):
     methods = ['GET']
@@ -58,13 +58,3 @@ class LeaguesView(BaseView):
         for league in leagues:
             ret = repr(league) + '\n'
         return ret
-
-#Page View Rules
-app.add_url_rule('/league/<lid>',
-                 view_func=LeagueView.as_view('league'))
-app.add_url_rule('/league/create',
-                 view_func=LeagueCreateView.as_view('league_create'))
-app.add_url_rule('/league/<lid>/edit',
-                 view_func=LeagueEditView.as_view('league_edit'))
-app.add_url_rule('/leagues/',
-                 view_func=LeaguesView.as_view('leagues'))

@@ -1,7 +1,6 @@
 from flask import redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 
-from mtgleague import app
 from mtgleague.util import db
 from mtgleague.views.scaffold import BaseView
 from mtgleague.forms import EventForm
@@ -57,14 +56,3 @@ class EventsView(BaseView):
 
     def handle_request(self, *args, **kwargs):
         return "Events"
-
-
-# Page View Rules
-app.add_url_rule('/event/<eid>',
-                 view_func=EventView.as_view('event'))
-app.add_url_rule('/league/<lid>/event/create',
-                 view_func=EventCreateView.as_view('event_create'))
-app.add_url_rule('/event/<eid>/edit',
-                 view_func=EventEditView.as_view('event_edit'))
-app.add_url_rule('/events/',
-                 view_func=EventsView.as_view('events'))

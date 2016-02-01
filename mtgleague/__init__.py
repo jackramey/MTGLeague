@@ -24,6 +24,4 @@ if not app.debug:
     app.logger.addHandler(file_handler)
     app.logger.info('MTGLeague startup')
 
-from mtgleague.views.index import *
-from mtgleague.views.league import *
-from mtgleague.views.event import *
+from mtgleague.views.routes import *

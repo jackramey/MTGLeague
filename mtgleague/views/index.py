@@ -1,6 +1,6 @@
 from flask import redirect, render_template, url_for
 from flask_login import login_user, logout_user
-from mtgleague import app
+
 from mtgleague.forms import LoginForm, RegisterForm
 from mtgleague.models.user import User
 from mtgleague.util import db
@@ -62,12 +62,3 @@ class RegisterView(BaseView):
                 return redirect(url_for('index'))
         else:
             return render_template('register.html', form=form, **self.context)
-
-app.add_url_rule('/',
-                 view_func=IndexView.as_view('index'))
-app.add_url_rule('/login',
-                 view_func=LoginView.as_view('login'))
-app.add_url_rule('/logout',
-                 view_func=LogoutView.as_view('logout'))
-app.add_url_rule('/register',
-                 view_func=RegisterView.as_view('register'))
