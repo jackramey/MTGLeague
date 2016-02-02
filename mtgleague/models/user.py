@@ -9,6 +9,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     admin = db.Column(db.Boolean)
 
+    participations = db.relationship('Participant', backref='user', lazy='dynamic')
+
     def __init__(self, name, email, password):
         self.name = name
         self.email = email

@@ -1,4 +1,5 @@
 from mtgleague.util import db
+from mtgleague.models.match import Match
 
 
 class Participant(db.Model):
@@ -7,5 +8,5 @@ class Participant(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
 
     def __init__(self, user, event):
-        self.user_id = user.id
-        self.event_id = event.id
+        self.user = user
+        self.event = event
