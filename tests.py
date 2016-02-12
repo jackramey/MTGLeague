@@ -8,7 +8,6 @@ from flask_testing import TestCase
 from mtgleague.util import db
 
 from mtgleague.models.event import Event
-from mtgleague.models.game import Game
 from mtgleague.models.league import League
 from mtgleague.models.match import Match
 from mtgleague.models.participant import Participant
