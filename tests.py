@@ -106,11 +106,6 @@ class MainDbTest(BaseModelTest):
 
         assert m in db.session
 
-        g1 = Game(m, winner=p1, loser=p2)
-        db.session.add(g1)
-        db.session.commit()
-
-        assert g1 in db.session
 
 if __name__ == '__main__':
     db.drop_all()
