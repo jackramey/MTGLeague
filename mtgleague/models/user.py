@@ -9,7 +9,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     admin = db.Column(db.Boolean)
 
-    participations = db.relationship('Participant', backref='user', lazy='dynamic')
+    participants = db.relationship('Participant', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):
         self.name = name
@@ -31,6 +31,34 @@ class User(db.Model, UserMixin):
     def get_auth_token(self):
         data = [str(self.id), self.password_hash]
         return login_serializer.dumps(data)
+
+    def get_matches(self):
+        matches = []
+        for p in self.participants:
+            matches.extend(p.get_matches())
+        return matches
+
+    def get_matches_count(self):
+        num_matches = 0
+        for p in self.participants:
+            num_matches += p.get_matches_count()
+        return num_matches
+
+    def get_matches_won(self):
+        matches_won = []
+        for p in self.participants:
+            matches_won.extend(p.get_matches_won())
+        return matches_won
+
+    def get_matches_won_count(self):
+        num_matches_won = 0
+        for p in self.participants:
+            num_matches_won += p.get_matches_won_count()
+        return num_matches_won
+
+    def match_win_percentage(self):
+        return self.get_matches_won_count() / self.get_matches_count()
+
 
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.email)
