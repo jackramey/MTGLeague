@@ -5,9 +5,8 @@ from datetime import date
 from flask import Flask
 from flask_testing import TestCase
 
+from mtgleague.models import Event, League, Match, Participant, Stage, User
 from mtgleague.util import db
-
-from mtgleague.models import *
 
 
 class BaseModelTest(TestCase):
@@ -35,8 +34,8 @@ class BaseModelTest(TestCase):
         db.session.add(event)
         db.session.commit()
 
-        round = Round(date.today(), date.today(), event)
-        db.session.add(round)
+        stage = Stage(event, date.today(), date.today())
+        db.session.add(stage)
         db.session.commit()
 
         p1 = Participant(u1, event)
@@ -45,7 +44,7 @@ class BaseModelTest(TestCase):
         db.session.add(p2)
         db.session.commit()
 
-        m = Match(event, p1, p2)
+        m = Match(stage, p1, p2)
         m.add_results(p1_wins=2,p2_wins=0)
         db.session.add(m)
         db.session.commit()
@@ -67,8 +66,7 @@ class ModelTest(BaseModelTest):
 
         event = Event.query.filter_by(name='TestEvent').first()
         assert event is not None
-        event_league = event.league
-        assert event_league is league
+        assert event.league is league
 
         u1 = User.query.filter_by(email='user1@u1.com').first()
         p1 = Participant.query.filter_by(user_id=u1.id).first()
@@ -78,7 +76,10 @@ class ModelTest(BaseModelTest):
         p2 = Participant.query.filter_by(user_id=u2.id).first()
         assert p2 is not None
 
-        match = Match.query.filter_by(event_id=event.id).first()
+        stage = Stage.query.filter_by(event_id=event.id).first()
+        assert stage is not None
+
+        match = Match.query.filter_by(stage_id=stage.id).first()
         assert match is not None
         assert match.participant1 is p1
         assert match.participant2 is p2

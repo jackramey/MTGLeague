@@ -12,7 +12,7 @@ class Event(db.Model):
     league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
     participants = db.relationship('Participant', backref='event',
                                    lazy='dynamic')
-    rounds = db.relationship('Round', backref='event', lazy='dynamic')
+    stages = db.relationship('Stage', backref='event', lazy='dynamic')
 
     def __init__(self, name, league):
         self.name = name
@@ -26,19 +26,6 @@ class Event(db.Model):
 
     def __unicode__(self):
         return self.name
-
-
-class EventRound(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
-    matches = db.relationship('Match', backref='event_round', lazy='dynamic')
-
-    def __init__(self, event, start_date, end_date):
-        self.event = event
-        self.start_date = start_date
-        self.end_date = end_date
 
 
 class League(db.Model):
@@ -62,7 +49,7 @@ class League(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    event_round_id = db.Column(db.Integer, db.ForeignKey('round.id'))
+    stage_id = db.Column(db.Integer, db.ForeignKey('stage.id'))
     p1_id = db.Column(db.Integer, db.ForeignKey('participant.id'))
     p2_id = db.Column(db.Integer, db.ForeignKey('participant.id'))
     winner_id = db.Column(db.Integer, db.ForeignKey('participant.id'))
@@ -77,8 +64,8 @@ class Match(db.Model):
     winner = db.relationship('Participant', foreign_keys=[winner_id])
     loser = db.relationship('Participant', foreign_keys=[loser_id])
 
-    def __init__(self, event_round, participant1, participant2):
-        self.event_round = event_round
+    def __init__(self, stage, participant1, participant2):
+        self.stage = stage
         self.participant1 = participant1
         self.participant2 = participant2
 
@@ -133,6 +120,19 @@ class Participant(db.Model):
 
     def opponent_match_win_percentage(self):
         pass
+
+
+class Stage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    matches = db.relationship('Match', backref='stage', lazy='dynamic')
+
+    def __init__(self, event, start_date, end_date):
+        self.event = event
+        self.start_date = start_date
+        self.end_date = end_date
 
 
 class User(db.Model, UserMixin):

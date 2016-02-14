@@ -4,14 +4,14 @@ from wtforms import PasswordField, StringField, SubmitField, FieldList, FormFiel
 from wtforms.validators import DataRequired, Email, EqualTo
 
 
-class RoundForm(Form):
+class StageForm(Form):
     start_date = MyDateField('Start Date', format="%m/%d/%Y")
     end_date = MyDateField('End Date', format="%m/%d/%Y")
 
 
 class EventForm(Form):
     name = StringField('Name', validators=[DataRequired()])
-    rounds = FieldList(FormField(RoundForm), min_entries=2)
+    stages = FieldList(FormField(StageForm), min_entries=2)
     submit = SubmitField('Submit', validators=[DataRequired()])
 
 
