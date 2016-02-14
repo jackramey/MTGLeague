@@ -1,6 +1,5 @@
-from mtgleague.util import db
 from mtgleague.models.participant import Participant
-from mtgleague.models.round import Round
+from mtgleague.models.eventround import Round
 
 
 class Event(db.Model):

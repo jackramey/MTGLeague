@@ -59,7 +59,6 @@ class User(db.Model, UserMixin):
     def match_win_percentage(self):
         return self.get_matches_won_count() / self.get_matches_count()
 
-
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.email)
 
