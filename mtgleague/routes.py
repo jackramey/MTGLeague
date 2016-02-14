@@ -1,7 +1,5 @@
 from mtgleague import app
-from mtgleague.views.event import *
-from mtgleague.views.index import *
-from mtgleague.views.league import *
+from mtgleague.views import *
 
 # General Navigation View Rules
 app.add_url_rule('/',
