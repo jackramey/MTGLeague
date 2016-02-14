@@ -1,7 +1,7 @@
 from wtforms.widgets import Input
 
 
-class DateInpu:
+class DateInput(Input):
     input_type = 'date'
 
 
