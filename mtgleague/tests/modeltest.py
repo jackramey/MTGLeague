@@ -7,12 +7,7 @@ from flask_testing import TestCase
 
 from mtgleague.util import db
 
-from mtgleague.models.event import Event
-from mtgleague.models.league import League
-from mtgleague.models.match import Match
-from mtgleague.models.participant import Participant
-from mtgleague.models.eventround import Round
-from mtgleague.models.user import User
+from mtgleague.models import *
 
 
 class BaseModelTest(TestCase):

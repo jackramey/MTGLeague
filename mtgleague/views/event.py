@@ -4,8 +4,7 @@ from flask_login import login_required, current_user
 from mtgleague.util import db
 from mtgleague.views.scaffold import BaseView
 from mtgleague.forms import EventForm
-from mtgleague.models.event import Event
-from mtgleague.models.league import League
+from mtgleague.models import Event, League
 
 
 class EventView(BaseView):

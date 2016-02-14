@@ -202,7 +202,7 @@ class User(db.Model, UserMixin):
         return self.name
 
 
-class Anonymous(AnonymousUserMixin):
+class AnonymousUser(AnonymousUserMixin):
 
     def is_admin(self):
         return False
@@ -224,4 +224,4 @@ def load_token(token):
         return user
     return None
 
-login_manager.anonymous_user = Anonymous
+login_manager.anonymous_user = AnonymousUser
