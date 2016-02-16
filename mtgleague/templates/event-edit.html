@@ -5,8 +5,18 @@
 <br/>
 <br/>
 <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-        {{ wtf.quick_form(form) }}
-    </div>
+    <form class="form form-horizontal" method="post" role="form">
+        <div class="col-md-offset-3 col-md-6">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_errors(form, hiddens="only") }}
+
+            {{ wtf.form_field(form.name) }}
+            {% for stage in form.stages%}
+                {{ stage.hidden_tag() }}
+                {{ wtf.form_field(stage) }}
+            {% endfor %}
+            {{ wtf.form_field(form.submit) }}
+        </div>
+    </form>
 </div>
 {% endblock %}

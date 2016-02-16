@@ -1,9 +1,9 @@
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, request, url_for
 from flask.views import View
 from flask_login import current_user, login_required, login_user, logout_user
 
 from mtgleague.forms import EventForm, LeagueForm, LoginForm, RegisterForm
-from mtgleague.models import Event, Match, League, Participant, User
+from mtgleague.models import Event, Match, League, Participant, Stage, User
 from mtgleague.util import db
 
 
@@ -42,14 +42,22 @@ class EventCreateView(BaseView):
     def handle_request(self, lid, *args, **kwargs):
         action_text = 'Create'
         action_url = url_for('event_create', lid=lid)
-        form = EventForm()
         league = League.query.filter_by(id=lid).first_or_404()
-        if form.validate_on_submit():
-            event = Event(form.name.data, league)
-            db.session.add(event)
-            db.session.commit()
-            return redirect(url_for('event', eid=event.id))
-        else:
+        if request.method == 'POST':
+            form = EventForm(request.form)
+            if form.validate_on_submit():
+                event = Event(form.name.data, league)
+                db.session.add(event)
+                for stage_data in form.stages.data:
+                    stage = Stage(event, stage_data['start_date'], stage_data['end_date'])
+                    db.session.add(stage)
+                db.session.commit()
+                return redirect(url_for('event', eid=event.id))
+            else:
+                return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
+                                       **self.context)
+        if request.method == 'GET':
+            form = EventForm()
             return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
                                    **self.context)
 
