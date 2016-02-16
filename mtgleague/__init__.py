@@ -4,6 +4,7 @@ from wtforms.fields import HiddenField
 # Create the app
 app = Flask(__name__)
 app.config.from_pyfile('mtgleague.cfg', False)
+app.config.from_object('config')
 
 
 # Jinja Template Additions

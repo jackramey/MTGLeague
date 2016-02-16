@@ -1,5 +1,7 @@
 #Temp folders
 tmp/
+#db_repository: not sure if this should be ignored...
+db_repository/
 
 #Python Files
 .py[cod]
