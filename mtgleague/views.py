@@ -39,6 +39,7 @@ class EventView(BaseView):
 class EventCreateView(BaseView):
     methods = ['GET', 'POST']
 
+    @login_required
     def handle_request(self, lid, *args, **kwargs):
         action_text = 'Create'
         action_url = url_for('event_create', lid=lid)
@@ -65,6 +66,7 @@ class EventCreateView(BaseView):
 class EventEditView(BaseView):
     methods = ['GET', 'POST']
 
+    @login_required
     def handle_request(self, eid, *args, **kwargs):
         action_text = 'Edit'
         action_url = url_for('event_edit', eid=eid)

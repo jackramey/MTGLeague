@@ -162,7 +162,7 @@ class User(db.Model, UserMixin):
         return False
 
     def get_auth_token(self):
-        data = [str(self.id), self.password_hash]
+        data = [str(self.id), self.password_hash.decode('utf-8')]
         return login_serializer.dumps(data)
 
     def get_matches(self):
