@@ -157,6 +157,7 @@ class LeagueView(BaseView):
 class LeagueCreateView(BaseView):
     methods = ['GET', 'POST']
 
+    @login_required
     def handle_request(self, *args, **kwargs):
         action_text = 'Create'
         action_url = url_for('league_create')
@@ -174,6 +175,7 @@ class LeagueCreateView(BaseView):
 class LeagueEditView(BaseView):
     methods = ['GET', 'POST']
 
+    @login_required
     def handle_request(self, lid, *args, **kwargs):
         action_text = 'Save'
         action_url = url_for('league_edit', lid=lid)
