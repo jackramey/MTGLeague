@@ -196,6 +196,7 @@ class User(db.Model, UserMixin):
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     memberships = db.relationship('Membership', backref='user', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
+    moderator_roles = db.relationship('Moderator', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):
         self.name = name
