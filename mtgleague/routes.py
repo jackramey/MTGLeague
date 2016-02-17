@@ -41,3 +41,13 @@ app.add_url_rule('/league/<lid>/join',
 # Participant View Rules
 app.add_url_rule('/participant/<pid>',
                  view_func=ParticipantView.as_view('participant'))
+
+
+@app.errorhandler(403)
+def page_not_found(e):
+    return render_template('403.html'), 403
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
