@@ -31,11 +31,16 @@ class Event(db.Model):
 class League(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     events = db.relationship('Event', backref='league',
                              lazy='dynamic')
 
-    def __init__(self, name):
+    def __init__(self, name, creator):
         self.name = name
+        self.creator = creator
+
+    def editable_by_user(self, user):
+        return user.id == self.creator_id
 
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)
@@ -142,6 +147,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     admin = db.Column(db.Boolean)
 
+    created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):

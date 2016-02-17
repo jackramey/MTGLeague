@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, abort
 from flask.views import View
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -163,7 +163,7 @@ class LeagueCreateView(BaseView):
         action_url = url_for('league_create')
         form = LeagueForm()
         if form.validate_on_submit():
-            league = League(form.name.data)
+            league = League(form.name.data, current_user)
             db.session.add(league)
             db.session.commit()
             return redirect(url_for('league', lid=league.id))
@@ -180,6 +180,8 @@ class LeagueEditView(BaseView):
         action_text = 'Save'
         action_url = url_for('league_edit', lid=lid)
         league = League.query.filter_by(id=lid).first_or_404()
+        if not league.editable_by_user(current_user):
+            abort(403)
         form = LeagueForm(obj=league)
         if form.validate_on_submit():
             league.name = form.name.data
