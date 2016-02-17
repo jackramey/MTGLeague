@@ -28,67 +28,6 @@ class BaseView(View):
         return self.handle_request(*args, **kwargs)
 
 
-class EventView(BaseView):
-    methods = ['GET']
-
-    def handle_request(self, eid, *args, **kwargs):
-        event = Event.query.filter_by(id=eid).first_or_404()
-        return "Event: {0}".format(event)
-
-
-class EventCreateView(BaseView):
-    methods = ['GET', 'POST']
-
-    @login_required
-    def handle_request(self, lid, *args, **kwargs):
-        action_text = 'Create'
-        action_url = url_for('event_create', lid=lid)
-        league = League.query.filter_by(id=lid).first_or_404()
-        if request.method == 'POST':
-            form = EventForm(request.form)
-            if form.validate_on_submit():
-                event = Event(form.name.data, league)
-                db.session.add(event)
-                for stage_data in form.stages.data:
-                    stage = Stage(event, stage_data['start_date'], stage_data['end_date'])
-                    db.session.add(stage)
-                db.session.commit()
-                return redirect(url_for('event', eid=event.id))
-            else:
-                return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
-                                       **self.context)
-        if request.method == 'GET':
-            form = EventForm()
-            return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
-                                   **self.context)
-
-
-class EventEditView(BaseView):
-    methods = ['GET', 'POST']
-
-    @login_required
-    def handle_request(self, eid, *args, **kwargs):
-        action_text = 'Edit'
-        action_url = url_for('event_edit', eid=eid)
-        event = Event.query.filter_by(id=eid).first_or_404()
-        form = EventForm(obj=event)
-        if form.validate_on_submit():
-            event.name = form.name.data
-            db.session.commit()
-            return redirect(url_for('event', eid=event.id))
-        else:
-            return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
-                                   **self.context)
-
-
-class EventsView(BaseView):
-    methods = ['GET']
-
-    def handle_request(self, *args, **kwargs):
-        return "Events"
-
-
-
 class IndexView(BaseView):
     methods = ['GET']
 
@@ -144,6 +83,70 @@ class RegisterView(BaseView):
                 return redirect(url_for('index'))
         else:
             return render_template('register.html', form=form, **self.context)
+
+
+class EventView(BaseView):
+    methods = ['GET']
+
+    def handle_request(self, eid, *args, **kwargs):
+        event = Event.query.filter_by(id=eid).first_or_404()
+        return "Event: {0}".format(event)
+
+
+class EventCreateView(BaseView):
+    methods = ['GET', 'POST']
+
+    @login_required
+    def handle_request(self, lid, *args, **kwargs):
+        action_text = 'Create'
+        action_url = url_for('event_create', lid=lid)
+        league = League.query.filter_by(id=lid).first_or_404()
+        if not league.editable_by_user(current_user):
+            abort(403)
+        if request.method == 'POST':
+            form = EventForm(request.form)
+            if form.validate_on_submit():
+                event = Event(form.name.data, league)
+                db.session.add(event)
+                for stage_data in form.stages.data:
+                    stage = Stage(event, stage_data['start_date'], stage_data['end_date'])
+                    db.session.add(stage)
+                db.session.commit()
+                return redirect(url_for('event', eid=event.id))
+            else:
+                return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
+                                       **self.context)
+        if request.method == 'GET':
+            form = EventForm()
+            return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
+                                   **self.context)
+
+
+class EventEditView(BaseView):
+    methods = ['GET', 'POST']
+
+    @login_required
+    def handle_request(self, eid, *args, **kwargs):
+        action_text = 'Edit'
+        action_url = url_for('event_edit', eid=eid)
+        event = Event.query.filter_by(id=eid).first_or_404()
+        if not event.league.editable_by_user(current_user):
+            abort(403)
+        form = EventForm(obj=event)
+        if form.validate_on_submit():
+            event.name = form.name.data
+            db.session.commit()
+            return redirect(url_for('event', eid=event.id))
+        else:
+            return render_template('event-edit.html', form=form, action_text=action_text, action_url=action_url,
+                                   **self.context)
+
+
+class EventsView(BaseView):
+    methods = ['GET']
+
+    def handle_request(self, *args, **kwargs):
+        return "Events"
 
 
 class LeagueView(BaseView):
