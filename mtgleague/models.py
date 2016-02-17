@@ -33,6 +33,7 @@ class League(db.Model):
     name = db.Column(db.String(255), unique=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    moderators = db.relationship('Moderator', backref='league', lazy='dynamic')
     events = db.relationship('Event', backref='league', lazy='dynamic')
     members = db.relationship('Membership', backref='league', lazy='dynamic')
 
@@ -40,13 +41,21 @@ class League(db.Model):
         self.name = name
         self.creator = creator
 
-    def add_memeber(self, user):
+    def add_member(self, user):
         membership = Membership(user, self)
         db.session.add(membership)
         db.session.commit()
 
+    def add_moderator(self, user):
+        moderator = Moderator(user, self)
+        db.session.add(moderator)
+        db.session.commit()
+
     def editable_by_user(self, user):
-        return user.id == self.creator_id
+        return user.id == self.creator_id or user in self.get_moderators_as_users()
+
+    def get_moderators_as_users(self):
+        return [moderator.user for moderator in self.moderators.all()]
 
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)
@@ -98,6 +107,16 @@ class Match(db.Model):
 
 
 class Membership(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
+
+    def __init__(self, user, league):
+        self.user = user
+        self.league = league
+
+
+class Moderator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
@@ -166,6 +185,7 @@ class User(db.Model, UserMixin):
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     memberships = db.relationship('Membership', backref='user', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
+    moderator_roles = db.relationship('Moderator', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):
         self.name = name
