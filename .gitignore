@@ -4,7 +4,7 @@ tmp/
 db_repository/
 
 #Python Files
-.py[cod]
+*.py[cod]
 __pycache__/
 
 #VirtualEnv
