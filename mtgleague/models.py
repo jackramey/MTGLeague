@@ -32,8 +32,9 @@ class League(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    events = db.relationship('Event', backref='league',
-                             lazy='dynamic')
+
+    events = db.relationship('Event', backref='league', lazy='dynamic')
+    members = db.relationship('Membership', backref='league', lazy='dynamic')
 
     def __init__(self, name, creator):
         self.name = name
@@ -89,6 +90,16 @@ class Match(db.Model):
             self.winner = self.participant2
             self.loser = self.participant1
         db.session.commit()
+
+
+class Membership(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
+
+    def __init__(self, user, league):
+        self.user = user
+        self.league = league
 
 
 class Participant(db.Model):
@@ -148,6 +159,7 @@ class User(db.Model, UserMixin):
     admin = db.Column(db.Boolean)
 
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
+    memberships = db.relationship('Membership', backref='user', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):
@@ -166,6 +178,10 @@ class User(db.Model, UserMixin):
 
     def is_anonymous(self):
         return False
+
+    def is_member(self, league):
+        leagues = [membership.league for membership in self.memberships]
+        return league in leagues
 
     def get_auth_token(self):
         data = [str(self.id), self.password_hash.decode('utf-8')]

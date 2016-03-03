@@ -154,7 +154,11 @@ class LeagueView(BaseView):
 
     def handle_request(self, lid, *args, **kwargs):
         league = League.query.filter_by(id=lid).first()
-        return 'League: {0}'.format(league)
+        if league is None:
+            abort(404)
+        members = league.members
+        is_member = current_user.is_member(league)
+        return render_template('league.html', league=league, members=members, is_member=is_member)
 
 
 class LeagueCreateView(BaseView):
@@ -182,7 +186,9 @@ class LeagueEditView(BaseView):
     def handle_request(self, lid, *args, **kwargs):
         action_text = 'Save'
         action_url = url_for('league_edit', lid=lid)
-        league = League.query.filter_by(id=lid).first_or_404()
+        league = League.query.filter_by(id=lid).first()
+        if league is None:
+            abort(404)
         if not league.editable_by_user(current_user):
             abort(403)
         form = LeagueForm(obj=league)
@@ -204,3 +210,31 @@ class LeaguesView(BaseView):
         for league in leagues:
             ret = repr(league) + '\n'
         return ret
+
+
+class LeagueJoinView(BaseView):
+    methods = ['PUT']
+
+    @login_required
+    def handle_request(self, lid, *args, **kwargs):
+        return redirect(url_for('league', lid=lid))
+
+
+class ParticipantView(BaseView):
+    methods = ['GET']
+
+    def handle_request(self, pid, *args, **kwargs):
+        participant = Participant.query.filter_by(id=pid).first()
+        if participant is None:
+            abort(404)
+        user = participant.user
+        event = participant.event
+        return render_template('participant.html', participant=participant, user=user, event=event)
+
+class MyLeagueView(BaseView):
+    methods = ['GET']
+
+    def handle_request(self, *args, **kwargs):
+        user = current_user._get_current_object()
+
+        return render_template('myleagues.html')

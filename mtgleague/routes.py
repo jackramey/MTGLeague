@@ -30,3 +30,10 @@ app.add_url_rule('/league/<lid>/edit',
                  view_func=LeagueEditView.as_view('league_edit'))
 app.add_url_rule('/leagues/',
                  view_func=LeaguesView.as_view('leagues'))
+app.add_url_rule('/league/<lid>/join',
+                 view_func=LeagueJoinView.as_view('league_join'))
+
+
+# Participant View Rules
+app.add_url_rule('/participant/<pid>',
+                 view_func=ParticipantView.as_view('participant'))
