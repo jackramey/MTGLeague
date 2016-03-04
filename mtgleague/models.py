@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from sqlalchemy import or_, and_
 
 from flask_login import AnonymousUserMixin, UserMixin
@@ -32,6 +32,7 @@ class League(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    creation_date = db.Column(db.Date)
 
     events = db.relationship('Event', backref='league', lazy='dynamic')
     members = db.relationship('Membership', backref='league', lazy='dynamic')
@@ -39,6 +40,7 @@ class League(db.Model):
     def __init__(self, name, creator):
         self.name = name
         self.creator = creator
+        self.creation_date = date.today()
 
     def add_member(self, user):
         membership = Membership(user, self)
@@ -48,10 +50,12 @@ class League(db.Model):
     def add_moderator(self, user):
         membership = Membership.query.filter(and_(Membership.league_id == self.id, Membership.user == user)).first()
         membership.moderator = True
+        membership.owner = False
         db.session.commit()
 
     def add_owner(self, user):
         membership = Membership.query.filter(and_(Membership.league_id == self.id, Membership.user == user)).first()
+        membership.moderator = False
         membership.owner = True
         db.session.commit()
 
@@ -187,6 +191,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(254), unique=True)
     password_hash = db.Column(db.String(64))
     admin = db.Column(db.Boolean)
+    join_date = db.Column(db.Date)
 
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     memberships = db.relationship('Membership', backref='user', lazy='dynamic')
@@ -196,6 +201,7 @@ class User(db.Model, UserMixin):
         self.name = name
         self.email = email
         self.set_password(password)
+        self.join_date = date.today()
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
