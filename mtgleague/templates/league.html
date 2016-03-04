@@ -17,15 +17,27 @@
         <div class="row">
             <h3>Creator</h3>
         </div>
+        {% for owner in league.get_owners() %}
         <div class="row">
-            <p>{{ league.creator }}</p>
+            <p>{{ owner.name }}</p>
         </div>
+        {% endfor %}
+        {% if league.get_moderators() %}
+        <div class="row">
+            <h3>Moderators</h3>
+        </div>
+        {% for mod in league.get_moderators() %}
+        <div class="row">
+            <p>{{ mod.name }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
         <div class="row">
             <h3>Members</h3>
         </div>
-        {% for member in members %}
+        {% for member in league.get_members() %}
         <div class="row">
-            <p>{{ member.user.name }}</p>
+            <p>{{ member.name }}</p>
         </div>
         {% endfor %}
     </div>

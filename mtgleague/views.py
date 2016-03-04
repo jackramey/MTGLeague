@@ -3,7 +3,7 @@ from flask.views import View
 from flask_login import current_user, login_required, login_user, logout_user
 
 from mtgleague.forms import EventForm, LeagueForm, LoginForm, RegisterForm
-from mtgleague.models import Event, Match, League, Participant, Stage, User
+from mtgleague.models import Event, Membership, League, Participant, Stage, User
 from mtgleague.util import db
 
 
@@ -156,9 +156,8 @@ class LeagueView(BaseView):
         league = League.query.filter_by(id=lid).first()
         if league is None:
             abort(404)
-        members = league.members
         is_member = current_user.is_member(league)
-        return render_template('league.html', league=league, members=members, is_member=is_member)
+        return render_template('league.html', league=league, is_member=is_member)
 
 
 class LeagueCreateView(BaseView):
@@ -171,7 +170,9 @@ class LeagueCreateView(BaseView):
         form = LeagueForm()
         if form.validate_on_submit():
             league = League(form.name.data, current_user)
+            membership = Membership(current_user, league, owner=True)
             db.session.add(league)
+            db.session.add(membership)
             db.session.commit()
             return redirect(url_for('league', lid=league.id))
         else:
@@ -221,7 +222,7 @@ class LeagueJoinView(BaseView):
         if not league:
             abort(404)
         user = current_user._get_current_object()
-        league.add_memeber(user)
+        league.add_member(user)
         return redirect(url_for('league', lid=lid))
 
 

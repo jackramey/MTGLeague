@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from flask_login import AnonymousUserMixin, UserMixin
 
@@ -33,7 +33,6 @@ class League(db.Model):
     name = db.Column(db.String(255), unique=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    moderators = db.relationship('Moderator', backref='league', lazy='dynamic')
     events = db.relationship('Event', backref='league', lazy='dynamic')
     members = db.relationship('Membership', backref='league', lazy='dynamic')
 
@@ -47,15 +46,28 @@ class League(db.Model):
         db.session.commit()
 
     def add_moderator(self, user):
-        moderator = Moderator(user, self)
-        db.session.add(moderator)
+        membership = Membership.query.filter(and_(Membership.league_id == self.id, Membership.user == user)).first()
+        membership.moderator = True
+        db.session.commit()
+
+    def add_owner(self, user):
+        membership = Membership.query.filter(and_(Membership.league_id == self.id, Membership.user == user)).first()
+        membership.owner = True
         db.session.commit()
 
     def editable_by_user(self, user):
-        return user.id == self.creator_id or user in self.get_moderators_as_users()
+        return user.id == self.creator_id or user in self.get_moderators()
 
-    def get_moderators_as_users(self):
-        return [moderator.user for moderator in self.moderators.all()]
+    def get_members(self):
+        return [member.user for member in self.members]
+
+    def get_moderators(self):
+        moderators = Membership.query.filter(and_(Membership.league_id == self.id, Membership.moderator)).all()
+        return [moderator.user for moderator in moderators]
+
+    def get_owners(self):
+        owners = Membership.query.filter(and_(Membership.league_id == self.id, Membership.owner)).all()
+        return [owner.user for owner in owners]
 
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)
@@ -110,20 +122,14 @@ class Membership(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
+    moderator = db.Column(db.Boolean)
+    owner = db.Column(db.Boolean)
 
-    def __init__(self, user, league):
+    def __init__(self, user, league, moderator=False, owner=False):
         self.user = user
         self.league = league
-
-
-class Moderator(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
-
-    def __init__(self, user, league):
-        self.user = user
-        self.league = league
+        self.moderator = moderator
+        self.owner = owner
 
 
 class Participant(db.Model):
@@ -185,7 +191,6 @@ class User(db.Model, UserMixin):
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     memberships = db.relationship('Membership', backref='user', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
-    moderator_roles = db.relationship('Moderator', backref='user', lazy='dynamic')
 
     def __init__(self, name, email, password):
         self.name = name
@@ -193,7 +198,7 @@ class User(db.Model, UserMixin):
         self.set_password(password)
 
     def check_password(self, password):
-            return bcrypt.check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password)
@@ -273,5 +278,6 @@ def load_token(token):
     if user and data[1] == user.password_hash:
         return user
     return None
+
 
 login_manager.anonymous_user = AnonymousUser
