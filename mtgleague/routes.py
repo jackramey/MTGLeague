@@ -11,6 +11,10 @@ app.add_url_rule('/logout',
 app.add_url_rule('/register',
                  view_func=RegisterView.as_view('register'))
 
+# General User Navigation
+app.add_url_rule('/myleagues',
+                 view_func=MyLeaguesView.as_view('myleagues'))
+
 # Event View Rules
 app.add_url_rule('/event/<eid>',
                  view_func=EventView.as_view('event'))

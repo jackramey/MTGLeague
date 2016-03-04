@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block container %}
+<div class="row">
+    <div class="col-md-9">
+        {% if not leagues and not leagues_created %}
+        <div class="row">
+            <p>You're not a member of any leagues!</p>
+        </div>
+        {% endif %}
+        {% if leagues%}
+        <div class="row">
+            <h4>Member of:</h4>
+            {% for league in leagues %}
+            <div class="row">
+                <p><a href="{{ url_for('league',lid=league.id) }}">{{ league.name }}</a></p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if leagues_created %}
+        <div class="row">
+            <h4>Creator of:</h4>
+            {% for league in leagues_created %}
+            <div class="row">
+                <p><a href="{{ url_for('league',lid=league.id) }}">{{ league.name }}</a></p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

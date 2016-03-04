@@ -51,7 +51,7 @@
                            aria-expanded="false">{{ current_user.name }}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
-                            <li><a href="#">My Leagues</a></li>
+                            <li><a href="{{ url_for('myleagues') }}">My Leagues</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ url_for('logout') }}">Logout</a></li>
                         </ul>

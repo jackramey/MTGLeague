@@ -40,6 +40,11 @@ class League(db.Model):
         self.name = name
         self.creator = creator
 
+    def add_memeber(self, user):
+        membership = Membership(user, self)
+        db.session.add(membership)
+        db.session.commit()
+
     def editable_by_user(self, user):
         return user.id == self.creator_id
 
@@ -186,6 +191,9 @@ class User(db.Model, UserMixin):
     def get_auth_token(self):
         data = [str(self.id), self.password_hash.decode('utf-8')]
         return login_serializer.dumps(data)
+
+    def get_leagues(self):
+        return [membership.league for membership in self.memberships]
 
     def get_matches(self):
         matches = []

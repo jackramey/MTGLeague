@@ -6,7 +6,7 @@
     </div>
     <div class="col-md-3">
         {% if not is_member %}
-        <a href="{{ url_for('league_join', lid=league.id) }}">Join</a>
+        <a class="btn btn-default" href="{{ url_for('league_join', lid=league.id) }}">Join</a>
         {% endif %}
     </div>
 </div>
@@ -15,6 +15,10 @@
     </div>
     <div class="col-md-3">
         <div class="row">
+            <h3>Creator</h3>
+        </div>
+        <div class="row">
+            <p>{{ league.creator }}</p>
         </div>
         <div class="row">
             <h3>Members</h3>

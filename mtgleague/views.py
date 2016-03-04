@@ -213,10 +213,15 @@ class LeaguesView(BaseView):
 
 
 class LeagueJoinView(BaseView):
-    methods = ['PUT']
+    methods = ['GET']
 
     @login_required
     def handle_request(self, lid, *args, **kwargs):
+        league = League.query.filter_by(id=lid).first()
+        if not league:
+            abort(404)
+        user = current_user._get_current_object()
+        league.add_memeber(user)
         return redirect(url_for('league', lid=lid))
 
 
@@ -231,10 +236,13 @@ class ParticipantView(BaseView):
         event = participant.event
         return render_template('participant.html', participant=participant, user=user, event=event)
 
-class MyLeagueView(BaseView):
+
+class MyLeaguesView(BaseView):
     methods = ['GET']
 
     def handle_request(self, *args, **kwargs):
         user = current_user._get_current_object()
+        leagues = user.get_leagues()
+        leagues_created = user.created_leagues.all()
 
-        return render_template('myleagues.html')
+        return render_template('myleagues.html', leagues=leagues, leagues_created=leagues_created)
