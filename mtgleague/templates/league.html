@@ -26,7 +26,7 @@
             </tr>
             {% for event in league.current_events() %}
             <tr>
-                <td>{{ event.name }}</td>
+                <td>{{ event|safe }}</td>
                 <td>{{ event.get_start_date() }}</td>
                 <td>{{ event.get_end_date() }}</td>
             </tr>
@@ -41,7 +41,7 @@
             </tr>
             {% for event in league.upcoming_events() %}
             <tr>
-                <td>{{ event.name }}</td>
+                <td>{{ event|safe }}</td>
                 <td>{{ event.get_start_date() }}</td>
                 <td>{{ event.get_end_date() }}</td>
             </tr>
@@ -56,7 +56,7 @@
             </tr>
             {% for event in league.past_events() %}
             <tr>
-                <td>{{ event.name }}</td>
+                <td>{{ event|safe }}</td>
                 <td>{{ event.get_start_date() }}</td>
                 <td>{{ event.get_end_date() }}</td>
             </tr>

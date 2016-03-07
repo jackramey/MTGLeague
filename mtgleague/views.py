@@ -90,7 +90,7 @@ class EventView(BaseView):
 
     def handle_request(self, eid, *args, **kwargs):
         event = Event.query.filter_by(id=eid).first_or_404()
-        return "Event: {0}".format(event)
+        return render_template('event.html', event=event)
 
 
 class EventCreateView(BaseView):

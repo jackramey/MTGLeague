@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from flask import url_for
 from sqlalchemy import or_, and_
 
 from flask_login import AnonymousUserMixin, UserMixin
@@ -22,7 +23,7 @@ class Event(db.Model):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.league)
 
     def __str__(self):
-        return self.name
+        return '<a href="' + url_for('event', eid=self.id) + '">' + self.name + '</a>'
 
     def __unicode__(self):
         return self.name
@@ -107,7 +108,7 @@ class League(db.Model):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)
 
     def __str__(self):
-        return self.name
+        return '<a href="' + url_for('league', lid=self.id) + '">' + self.name + '</a>'
 
     def __unicode__(self):
         return self.name

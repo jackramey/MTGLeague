@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block container %}
+<div class="row">
+    <div class="col-md-9">
+        <h1>{{ event.league|safe }} <i class="fa fa-long-arrow-right"></i> {{ event|safe }}</h1>
+    </div>
+</div>
+{% endblock %}
