@@ -27,6 +27,27 @@ class Event(db.Model):
     def __unicode__(self):
         return self.name
 
+    def get_start_date(self):
+        first_stage = self.stages.order_by(Stage.start_date).first()
+        return first_stage.start_date
+
+    def get_end_date(self):
+        last_stage = self.stages.order_by(Stage.start_date.desc()).first()
+        return last_stage.end_date
+
+    def is_past(self):
+        last_stage = self.stages.order_by(Stage.start_date.desc()).first()
+        return last_stage.end_date <= date.today()
+
+    def in_progress(self):
+        first_stage = self.stages.order_by(Stage.start_date).first()
+        last_stage = self.stages.order_by(Stage.start_date.desc()).first()
+        return first_stage.start_date <= date.today() <= last_stage.end_date
+
+    def is_upcoming(self):
+        first_stage = self.stages.order_by(Stage.start_date).first()
+        return date.today() <= first_stage.start_date
+
 
 class League(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,6 +93,15 @@ class League(db.Model):
     def get_owners(self):
         owners = Membership.query.filter(and_(Membership.league_id == self.id, Membership.owner)).all()
         return [owner.user for owner in owners]
+
+    def current_events(self):
+        return [event for event in self.events.all() if event.in_progress()]
+
+    def past_events(self):
+        return [event for event in self.events.all() if event.is_past()]
+
+    def upcoming_events(self):
+        return [event for event in self.events.all() if event.is_upcoming()]
 
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)

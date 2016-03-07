@@ -12,6 +12,56 @@
 </div>
 <div class="row">
     <div class="col-md-9">
+        {% if league.editable_by_user(current_user) %}
+        <div class="row">
+            <a class="btn btn-default" href="{{ url_for('event_create', lid=league.id) }}">Create New Event</a>
+        </div>
+        {% endif %}
+        <div class="row">
+            <h3>Events Running Now:</h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Name</th><th>Start Date</th><th>End Date</th>
+            </tr>
+            {% for event in league.current_events() %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.get_start_date() }}</td>
+                <td>{{ event.get_end_date() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="row">
+            <h3>Upcoming Events:</h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Name</th><th>Start Date</th><th>End Date</th>
+            </tr>
+            {% for event in league.upcoming_events() %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.get_start_date() }}</td>
+                <td>{{ event.get_end_date() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="row">
+            <h3>Past Events:</h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Name</th><th>Start Date</th><th>End Date</th>
+            </tr>
+            {% for event in league.past_events() %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.get_start_date() }}</td>
+                <td>{{ event.get_end_date() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
     <div class="col-md-3">
         <div class="row">
