@@ -3,7 +3,7 @@ from flask import url_for
 from markupsafe import Markup
 from sqlalchemy import or_, and_
 
-from flask_login import AnonymousUserMixin, UserMixin
+from flask_login import AnonymousUserMixin, UserMixin, current_user
 
 from mtgleague.util import bcrypt, db, login_manager, login_serializer
 
@@ -32,6 +32,11 @@ class Event(db.Model):
     def __unicode__(self):
         return self.name
 
+    def add_participant(self, user):
+        participant = Participant(user, self)
+        db.session.add(participant)
+        db.session.commit()
+
     def get_start_date(self):
         first_stage = self.stages.order_by(Stage.start_date).first()
         return first_stage.start_date
@@ -39,6 +44,9 @@ class Event(db.Model):
     def get_end_date(self):
         last_stage = self.stages.order_by(Stage.start_date.desc()).first()
         return last_stage.end_date
+
+    def is_participant(self, user):
+        return self.participants.filter_by(user=user).first() is not None
 
     def is_past(self):
         last_stage = self.stages.order_by(Stage.start_date.desc()).first()

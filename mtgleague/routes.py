@@ -22,6 +22,8 @@ app.add_url_rule('/league/<lid>/event/create',
                  view_func=EventCreateView.as_view('event_create'))
 app.add_url_rule('/event/<eid>/edit',
                  view_func=EventEditView.as_view('event_edit'))
+app.add_url_rule('/event/<eid>/join',
+                 view_func=EventJoinView.as_view('event_join'))
 app.add_url_rule('/events/',
                  view_func=EventsView.as_view('events'))
 

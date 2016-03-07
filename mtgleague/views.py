@@ -150,6 +150,18 @@ class EventsView(BaseView):
         return "Events"
 
 
+class EventJoinView(BaseView):
+    methods = ['GET']
+
+    @login_required
+    def handle_request(self, eid, *args, **kwargs):
+        event = Event.query.filter_by(id=eid).first()
+        if event is None:
+            abort(404)
+        event.add_participant(current_user)
+        return redirect(url_for('event', eid=eid))
+
+
 class LeagueView(BaseView):
     methods = ['GET']
 
