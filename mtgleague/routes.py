@@ -1,5 +1,8 @@
+from flask_admin.contrib.sqla import ModelView
+
 from mtgleague import app
 from mtgleague.views import *
+from mtgleague.util import admin, db, MTGLeagueModelView
 
 # General Navigation View Rules
 app.add_url_rule('/',
@@ -53,3 +56,9 @@ def page_not_found(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+# Admin Views
+admin.add_view(MTGLeagueModelView(Event, db.session))
+admin.add_view(MTGLeagueModelView(League, db.session))
+admin.add_view(MTGLeagueModelView(Participant, db.session))
+admin.add_view(MTGLeagueModelView(User, db.session))
