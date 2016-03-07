@@ -32,7 +32,8 @@ class IndexView(BaseView):
     methods = ['GET']
 
     def handle_request(self):
-        return render_template('index.html', **self.context)
+        leagues = League.query.all()
+        return render_template('index.html', leagues=leagues, **self.context)
 
 
 class LoginView(BaseView):
