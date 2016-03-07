@@ -16,7 +16,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 #Flask Admin
-admin = Admin(app, name='mtgleague', template_mode='bootstrap3')
+admin = Admin(app, name='MTG League', template_mode='bootstrap3')
 
 class MTGLeagueModelView(ModelView):
 

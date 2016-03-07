@@ -45,6 +45,10 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">Profile</a></li>
                             <li><a href="{{ url_for('myleagues') }}">My Leagues</a></li>
+                            {% if current_user.is_admin() %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ url_for('admin.index') }}">Admin Panel</a></li>
+                            {% endif %}
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ url_for('logout') }}">Logout</a></li>
                         </ul>
