@@ -13,6 +13,7 @@ if admin is not None:
         db.session.commit()
 else:
     admin = User(name, email, password)
+    admin.admin = True
     db.session.add(admin)
     db.session.commit()
 
