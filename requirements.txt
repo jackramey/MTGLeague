@@ -3,6 +3,7 @@ cffi==1.4.2
 decorator==4.0.9
 dominate==2.1.16
 Flask==0.10.1
+Flask-Admin==1.4.0
 Flask-Bcrypt==0.7.1
 Flask-Login==0.3.2
 Flask-SQLAlchemy==2.1
