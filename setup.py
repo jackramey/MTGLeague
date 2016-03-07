@@ -6,7 +6,7 @@ name = app.config['DEFAULT_ADMIN']
 email = app.config['DEFAULT_ADMIN_EMAIL']
 password = app.config['DEFAULT_ADMIN_PASSWORD']
 
-admin = User.query.filter_by(email=email)
+admin = User.query.filter_by(email=email).first()
 if admin is not None:
     if not admin.admin:
         admin.admin = True
