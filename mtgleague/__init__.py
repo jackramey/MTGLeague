@@ -1,5 +1,5 @@
-from flask import Flask
 import os
+from flask import Flask
 from wtforms.fields import HiddenField
 
 # Create the app
