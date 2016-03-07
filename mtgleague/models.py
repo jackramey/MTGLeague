@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from flask import url_for
+from markupsafe import Markup
 from sqlalchemy import or_, and_
 
 from flask_login import AnonymousUserMixin, UserMixin
@@ -19,11 +20,14 @@ class Event(db.Model):
         self.name = name
         self.league_id = league.id
 
+    def __html__(self):
+        return Markup('<a href="' + url_for('event', eid=self.id) + '">' + self.name + '</a>')
+
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.league)
 
     def __str__(self):
-        return '<a href="' + url_for('event', eid=self.id) + '">' + self.name + '</a>'
+        return self.name
 
     def __unicode__(self):
         return self.name
@@ -104,11 +108,14 @@ class League(db.Model):
     def upcoming_events(self):
         return [event for event in self.events.all() if event.is_upcoming()]
 
+    def __html__(self):
+        return Markup('<a href="' + url_for('league', lid=self.id) + '">' + self.name + '</a>')
+
     def __repr__(self):
         return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.id, self.name)
 
     def __str__(self):
-        return '<a href="' + url_for('league', lid=self.id) + '">' + self.name + '</a>'
+        return self.name
 
     def __unicode__(self):
         return self.name
@@ -201,6 +208,9 @@ class Participant(db.Model):
 
     def opponent_match_win_percentage(self):
         pass
+
+    def __html__(self):
+        return Markup('<a href="' + url_for('participant', pid=self.id) + '">' + self.name + '</a>')
 
 
 class Stage(db.Model):
