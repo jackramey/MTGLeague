@@ -12,7 +12,7 @@
 </div>
 <div class="row">
     <div class="col-md-9">
-        {% if league.editable_by_user(current_user) %}
+        {% if not current_user.is_anonymous() and league.editable_by_user(current_user) %}
         <div class="row">
             <a class="btn btn-default" href="{{ url_for('event_create', lid=league.id) }}">Create New Event</a>
         </div>
