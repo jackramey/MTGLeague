@@ -20,18 +20,6 @@ class Event(db.Model):
         self.name = name
         self.league_id = league.id
 
-    def __html__(self):
-        return Markup('<a href="' + url_for('event', eid=self.id) + '">' + self.name + '</a>')
-
-    def __repr__(self):
-        return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.league)
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
-
     def add_participant(self, user):
         participant = Participant(user, self)
         db.session.add(participant)
@@ -60,6 +48,18 @@ class Event(db.Model):
     def is_upcoming(self):
         first_stage = self.stages.order_by(Stage.start_date).first()
         return date.today() <= first_stage.start_date
+
+    def __html__(self):
+        return Markup('<a href="' + url_for('event', eid=self.id) + '">' + self.name + '</a>')
+
+    def __repr__(self):
+        return '<{0}: {1}, {2}>'.format(self.__class__.__name__, self.name, self.league)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
 
 
 class League(db.Model):
@@ -217,8 +217,11 @@ class Participant(db.Model):
     def opponent_match_win_percentage(self):
         pass
 
+    def __str__(self):
+        return str(self.user)
+
     def __html__(self):
-        return Markup('<a href="' + url_for('participant', pid=self.id) + '">' + self.name + '</a>')
+        return Markup('<a href="' + url_for('participant', pid=self.id) + '">' + self.user.name + '</a>')
 
 
 class Stage(db.Model):

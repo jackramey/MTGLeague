@@ -2,8 +2,8 @@ from flask import redirect, render_template, request, url_for, abort
 from flask.views import View
 from flask_login import current_user, login_required, login_user, logout_user
 
-from mtgleague.forms import EventForm, LeagueForm, LoginForm, RegisterForm
-from mtgleague.models import Event, Membership, League, Participant, Stage, User
+from mtgleague.forms import EventForm, LeagueForm, LoginForm, RegisterForm, MatchForm
+from mtgleague.models import Event, Membership, League, Participant, Stage, User, Match
 from mtgleague.util import db
 
 
@@ -260,3 +260,26 @@ class MyLeaguesView(BaseView):
         leagues_created = user.created_leagues.all()
 
         return render_template('myleagues.html', leagues=leagues, leagues_created=leagues_created)
+
+
+class SubmitMatchSlipView(BaseView):
+    methods = ['GET', 'POST']
+
+    def handle_request(self, sid, *args, **kwargs):
+        action_text = 'Submit'
+        action_url = url_for('submit_match', sid=sid)
+        stage = Stage.query.filter_by(id=sid).first()
+        if stage is None:
+            abort(404)
+        form = MatchForm()
+        form.player1.query_factory = lambda: Participant.query.filter_by(event_id=stage.event_id).all()
+        form.player2.query_factory = lambda: Participant.query.filter_by(event_id=stage.event_id).all()
+        if form.validate_on_submit():
+            participant1 = form.player1.data
+            participant2 = form.player2.data
+            match = Match(stage, participant1, participant2)
+            match.add_results(form.p1wins.data, form.p2wins.data)
+            return redirect(url_for('event', eid=stage.event_id))
+        else:
+            return render_template('submit-match-slip.html', form=form, action_url=action_url, action_text=action_text,
+                                   **self.context)

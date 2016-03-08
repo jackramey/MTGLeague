@@ -14,7 +14,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Stage</th><th>Start Date</th><th>End Date</th>
+                    <th>Stage</th><th>Start Date</th><th>End Date</th><th></th>
                 </tr>
                 </thead>
                 {% for stage in event.stages %}
@@ -22,6 +22,7 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ stage.start_date }}</td>
                     <td>{{ stage.end_date }}</td>
+                    <td><a class="btn btn-default" href="{{ url_for('submit_match', sid=stage.id) }}">Submit Match Results</a></td>
                 </tr>
                 {% endfor %}
             </table>

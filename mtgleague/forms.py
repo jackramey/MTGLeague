@@ -1,6 +1,6 @@
-from mtgleague.fields import MyDateField
 from flask_wtf import Form
-from wtforms import PasswordField, StringField, SubmitField, FieldList, FormField
+from wtforms import PasswordField, StringField, SubmitField, FieldList, FormField, IntegerField, SelectField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, EqualTo
 
@@ -13,6 +13,19 @@ class StageForm(Form):
 class EventForm(Form):
     name = StringField('Event Name', validators=[DataRequired()])
     stages = FieldList(FormField(StageForm), min_entries=2)
+    submit = SubmitField('Submit', validators=[DataRequired()])
+
+
+class MatchForm(Form):
+    player1 = QuerySelectField('Player 1',
+                               allow_blank=True,
+                               blank_text=u'-- please choose --')
+    player2 = QuerySelectField('Player 2',
+                               allow_blank=True,
+                               blank_text=u'-- please choose --')
+    p1wins = IntegerField('Player 1 wins', default=0)
+    p2wins = IntegerField('Player 2 wins', default=0)
+    draws = IntegerField('Draws', default=0)
     submit = SubmitField('Submit', validators=[DataRequired()])
 
 

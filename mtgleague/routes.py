@@ -42,6 +42,9 @@ app.add_url_rule('/leagues/',
 app.add_url_rule('/league/<lid>/join',
                  view_func=LeagueJoinView.as_view('league_join'))
 
+# Stage View Rules
+app.add_url_rule('/stage/<sid>/submitmatch',
+                 view_func=SubmitMatchSlipView.as_view('submit_match'))
 
 # Participant View Rules
 app.add_url_rule('/participant/<pid>',
@@ -60,5 +63,7 @@ def page_not_found(e):
 # Admin Views
 admin.add_view(MTGLeagueModelView(Event, db.session))
 admin.add_view(MTGLeagueModelView(League, db.session))
+admin.add_view(MTGLeagueModelView(Match, db.session))
+admin.add_view(MTGLeagueModelView(Membership, db.session))
 admin.add_view(MTGLeagueModelView(Participant, db.session))
 admin.add_view(MTGLeagueModelView(User, db.session))
