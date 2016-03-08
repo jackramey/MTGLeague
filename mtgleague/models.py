@@ -323,6 +323,9 @@ class AnonymousUser(AnonymousUserMixin):
     def is_anonymous(self):
         return True
 
+    def is_member(self, league):
+        return False
+
 
 @login_manager.user_loader
 def load_user(userid):

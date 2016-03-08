@@ -169,7 +169,7 @@ class LeagueView(BaseView):
         league = League.query.filter_by(id=lid).first()
         if league is None:
             abort(404)
-        is_member = current_user.is_anonymous() ? False : current_user.is_member(league)
+        is_member = current_user.is_member(league)
         return render_template('league.html', league=league, is_member=is_member)
 
 
