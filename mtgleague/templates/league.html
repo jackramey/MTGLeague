@@ -2,7 +2,8 @@
 {% block container %}
 <div class="row">
     <div class="col-md-9">
-        <h1>{{league.name}} <a href="{{ url_for('league_edit', lid=league.id) }}"><i class="fa fa-edit fa-sm"></i></a></h1>
+        <a href="#" id="league-name" data-type="text" data-pk="1" data-url="{{url_for('league_api', lid=league.id)}}" data-title="Enter league name">{{league.name}}</a>
+        <h1>{{league}} <a href="{{ url_for('league_edit', lid=league.id) }}"><i class="fa fa-edit fa-sm"></i></a></h1>
     </div>
     <div class="col-md-3">
         {% if not is_member %}

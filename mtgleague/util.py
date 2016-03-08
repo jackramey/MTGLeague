@@ -3,6 +3,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask.ext.bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
+from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
 
@@ -30,6 +31,9 @@ class MTGLeagueModelView(ModelView):
 
 #Database
 db = SQLAlchemy(app)
+
+#Marshmallow
+ma = Marshmallow(app)
 
 #Login Serializer
 login_serializer = URLSafeTimedSerializer(app.secret_key)

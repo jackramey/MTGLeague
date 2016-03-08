@@ -5,6 +5,7 @@
     <title>MTG League</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}">
 </head>
 <body>
@@ -69,7 +70,14 @@
     <!-- Site dependent scripts here for faster page loading -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script>
+        $.fn.editable.defaults.mode = 'inline';
+        $(document).ready(function() {
+            $('#league-name').editable();
+        });
+    </script>
 </div>
 </body>
 </html>

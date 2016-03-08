@@ -2,6 +2,7 @@ from flask_admin.contrib.sqla import ModelView
 
 from mtgleague import app
 from mtgleague.views import *
+from mtgleague.api import *
 from mtgleague.util import admin, db, MTGLeagueModelView
 from mtgleague.models import Event, Membership, League, Participant, Post, Stage, User, Match
 
@@ -70,3 +71,13 @@ admin.add_view(MTGLeagueModelView(Participant, db.session))
 admin.add_view(MTGLeagueModelView(Post, db.session))
 admin.add_view(MTGLeagueModelView(Stage, db.session))
 admin.add_view(MTGLeagueModelView(User, db.session))
+
+# API
+app.add_url_rule('/api/leagues/<lid>',
+                 view_func=LeagueAPI.as_view('league_api'))
+app.add_url_rule('/api/memberships/<mid>',
+                 view_func=MembershipAPI.as_view('membership_api'))
+app.add_url_rule('/api/users/<uid>',
+                 view_func=UserAPI.as_view('user_api'))
+app.add_url_rule('/api/users',
+                 view_func=UsersAPI.as_view('users_api'))
