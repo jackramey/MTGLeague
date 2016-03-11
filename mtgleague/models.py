@@ -70,6 +70,7 @@ class League(db.Model):
 
     events = db.relationship('Event', backref='league', lazy='dynamic')
     members = db.relationship('Membership', backref='league', lazy='dynamic')
+    post = db.relationship('Post', backref='league', lazy='dynamic')
 
     def __init__(self, name, creator):
         self.name = name
@@ -91,6 +92,11 @@ class League(db.Model):
         membership = Membership.query.filter(and_(Membership.league_id == self.id, Membership.user == user)).first()
         membership.moderator = False
         membership.owner = True
+        db.session.commit()
+
+    def add_post(self, user, title, body):
+        post = Post(self, user, title, body)
+        db.session.add(post)
         db.session.commit()
 
     def editable_by_user(self, user):
@@ -224,6 +230,22 @@ class Participant(db.Model):
         return Markup('<a href="' + url_for('participant', pid=self.id) + '">' + self.user.name + '</a>')
 
 
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    league_id = db.Column(db.Integer, db.ForeignKey('league.id'))
+    title = db.Column(db.String(140))
+    body = db.Column(db.String(1000))
+
+    def __init__(self, league, author, title, body):
+        self.league = league
+        self.author = author
+        self.title = title
+        self.body = body
+        self.created_at = datetime.now()
+
+
 class Stage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
@@ -248,6 +270,7 @@ class User(db.Model, UserMixin):
     created_leagues = db.relationship('League', backref='creator', lazy='dynamic')
     memberships = db.relationship('Membership', backref='user', lazy='dynamic')
     participants = db.relationship('Participant', backref='user', lazy='dynamic')
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __init__(self, name, email, password):
         self.name = name
