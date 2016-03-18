@@ -3,7 +3,7 @@ from flask.views import View
 from flask_login import current_user, login_required, login_user, logout_user
 
 from mtgleague.forms import EventForm, LeagueForm, LoginForm, RegisterForm, MatchForm
-from mtgleague.models import Event, Membership, League, Participant, Stage, User, Match
+from mtgleague.models import Event, Membership, League, Participant, Post, Stage, User, Match
 from mtgleague.util import db
 
 

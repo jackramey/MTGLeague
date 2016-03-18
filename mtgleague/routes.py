@@ -3,6 +3,7 @@ from flask_admin.contrib.sqla import ModelView
 from mtgleague import app
 from mtgleague.views import *
 from mtgleague.util import admin, db, MTGLeagueModelView
+from mtgleague.models import Event, Membership, League, Participant, Post, Stage, User, Match
 
 # General Navigation View Rules
 app.add_url_rule('/',
@@ -66,4 +67,6 @@ admin.add_view(MTGLeagueModelView(League, db.session))
 admin.add_view(MTGLeagueModelView(Match, db.session))
 admin.add_view(MTGLeagueModelView(Membership, db.session))
 admin.add_view(MTGLeagueModelView(Participant, db.session))
+admin.add_view(MTGLeagueModelView(Post, db.session))
+admin.add_view(MTGLeagueModelView(Stage, db.session))
 admin.add_view(MTGLeagueModelView(User, db.session))

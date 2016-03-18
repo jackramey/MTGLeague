@@ -18,6 +18,7 @@ login_manager.login_view = 'login'
 #Flask Admin
 admin = Admin(app, name='MTG League', template_mode='bootstrap3')
 
+
 class MTGLeagueModelView(ModelView):
 
     def is_accessible(self):
