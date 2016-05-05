@@ -1,3 +1,4 @@
+from flask import json
 from flask.views import MethodView
 from flask_login import login_required
 from mtgleague.models import League, Membership, User
@@ -36,9 +37,12 @@ class UserAPI(MethodView):
 
 
 class UsersAPI(MethodView):
-    user_schema = UserSchema(exclude='password_hash')
+    user_schema = UserSchema()
 
     @login_required
     def get(self):
         users = User.query.all()
-        return self.user_schema.jsonify(users)
+        users_raw = {'users': []}
+        for user in users:
+            users_raw['users'].append(self.user_schema.dump(user).data)
+        return json.jsonify(users_raw)

@@ -25,3 +25,4 @@ class MembershipSchema(ma.ModelSchema):
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
+        exclude = ["email", "password_hash"]
